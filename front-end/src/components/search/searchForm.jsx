@@ -1,16 +1,11 @@
-import { useState } from "react";
+import { debounce } from "lodash";
 export const SearchForm = (props) => {
   const { handleSubmit, placeholder } = props;
-  const [text, setText] = useState("");
 
-  const handleChange = (e) => {
-    setText(e.target.value);
-  };
-
-  const submitHandler = (e) => {
-    e.preventDefault();
-    handleSubmit(text);
-  };
+  const handleKeyup = debounce((e) => {
+    const val = e.target.value;
+    handleSubmit(val);
+  }, 1000);
 
   return (
     <form
@@ -18,14 +13,12 @@ export const SearchForm = (props) => {
         padding: "20px",
         margin: "0 auto",
       }}
-      onSubmit={(e) => submitHandler(e)}
     >
       <div>
         <input
           name="search"
           type="search"
-          onChange={(e) => handleChange(e)}
-          value={text}
+          onKeyUp={(e) => handleKeyup(e)}
           placeholder={placeholder}
           style={{
             width: "250px",
@@ -35,23 +28,6 @@ export const SearchForm = (props) => {
           }}
         />
       </div>
-      <button
-        type="submit"
-        disabled={text === ""}
-        className="find-btn"
-        style={{
-          padding: "20px",
-          marginTop: "40px",
-          background: "#DFFFD6",
-          color: "darkslategrey",
-          border: "1px #4CCB29 solid",
-          borderRadius: "2px",
-          cursor: "pointer",
-          width: "200px",
-        }}
-      >
-        <span style={{ fontWeight: "bold" }}>Find</span>
-      </button>
     </form>
   );
 };
